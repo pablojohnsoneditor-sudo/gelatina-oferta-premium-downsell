@@ -585,7 +585,38 @@
 
   // SKIP -> app.codigodasaude.site
   document.getElementById('btnSkip').addEventListener('click', function() {
+    if (typeof window.clarity === 'function') window.clarity('set', 'upsell_skip', 'yes');
+    if (typeof gtag !== 'undefined') gtag('event', 'upsell_skip', {event_category: 'premium_downsell'});
+    if (typeof fbq !== 'undefined') fbq('trackCustom', 'UpsellSkip', {page: 'premium_downsell'});
     window.location.href = 'https://app.codigodasaude.site/';
+  });
+
+  // SMART TRACKING
+  function trackEvt(name, params) {
+    if (typeof window.clarity === 'function') window.clarity('set', name, params && params.label ? params.label : 'yes');
+    if (typeof gtag !== 'undefined') gtag('event', name, Object.assign({event_category: 'premium_downsell'}, params || {}));
+    if (typeof fbq !== 'undefined' && params && params.fbq_event) fbq('trackCustom', params.fbq_event, params);
+  }
+  // Scroll depth 25/50/75/100%
+  (function() {
+    var depths = {};
+    window.addEventListener('scroll', function() {
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      if (total <= 0) return;
+      var pct = Math.round((window.scrollY / total) * 100);
+      [25, 50, 75, 100].forEach(function(d) {
+        if (!depths[d] && pct >= d) {
+          depths[d] = true;
+          trackEvt('scroll_depth_' + d, {profundidade: d, fbq_event: 'ScrollDepth'});
+        }
+      });
+    }, {passive: true});
+  })();
+  // Time milestones 30s/60s/120s/180s
+  [30, 60, 120, 180].forEach(function(sec) {
+    setTimeout(function() {
+      trackEvt('tempo_' + sec + 's', {segundos: sec, label: sec + 's', fbq_event: 'TimeMilestone'});
+    }, sec * 1000);
   });
 </script>
 
