@@ -548,9 +548,12 @@
 </div>
 
 <script>
+  function genEventId() { return 'eid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); }
+
   // CTA CLICK TRACKING
   document.getElementById('ctaBtn').addEventListener('click', function() {
-    fbq('track', 'InitiateCheckout', {value: 697, currency: 'BRL'});
+    var eventId = genEventId();
+    fbq('track', 'InitiateCheckout', {value: 697, currency: 'BRL'}, {eventID: eventId});
     fbq('trackCustom', 'premium_downsell_click');
     if (typeof gtag !== 'undefined') gtag('event', 'premium_downsell_click');
   });
