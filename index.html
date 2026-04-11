@@ -591,7 +591,7 @@
     if (typeof window.clarity === 'function') window.clarity('set', 'upsell_skip', 'yes');
     if (typeof gtag !== 'undefined') gtag('event', 'upsell_skip', {event_category: 'premium_downsell'});
     if (typeof fbq !== 'undefined') fbq('trackCustom', 'UpsellSkip', {page: 'premium_downsell'});
-    window.location.href = 'https://app.codigodasaude.site/';
+    window.location.href = 'https://app.codigodasaude.site/' + window.location.search;
   });
 
   // SMART TRACKING
